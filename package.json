@@ -1,0 +1,21 @@
+{
+  "name": "package",
+  "version": "1.0.0",
+  "description": "A application for better folder management",
+  "main": "app.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "none"
+  },
+  "keywords": [
+    "none"
+  ],
+  "author": "brunohenriqu2",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "electron": "^38.1.0"
+  }
+}

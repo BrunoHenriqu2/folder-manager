@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Folder Manager</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Alkatra:wght@400..700&display=swap');
+
+        body {
+            background: linear-gradient(#000000, #070122);
+            width: 100dvw;
+            height: 100dvh;
+            overflow-x: hidden;
+            overflow-y: auto;
+            color: #f3f3f3;
+            font-family: "alkatra";
+        }
+
+        button {
+            width: 100px;
+            height: 25px;
+            cursor: pointer;
+        }
+
+        h1 {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Folder Manager</h1>
+    <div id="folders"></div>
+    <button id="new-folder">Nova Pasta</button>
+    <script>
+        const create = {
+            newblock() {
+                const div = document.createElement("div")
+                const input = document.createElement("input")
+                const radio = document.createElement("input")
+
+                div.className = "folder"
+                radio.type = "radio"
+
+                document.querySelector("#folders").appendChild(div)
+            }
+        }
+
+        function start() {
+            const newFolderButton = document.querySelector("button#new-folder")
+
+            newFolderButton.addEventListener("click", () => {
+                alert("criar nova pasta")
+            })
+        }
+
+        start()
+    </script>
+</body>
+
+</html>
