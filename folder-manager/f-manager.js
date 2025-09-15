@@ -1,5 +1,21 @@
+const { ipcRenderer } = require("electron")
 const fs = require("fs")
 const path = require('path')
+let defaultConfig = {
+    "folders": [
+        {
+            "name": "Nome padrão 2",
+            "requireDate": false,
+            "subfolders": [
+                {
+                    "name": "Teste123",
+                    "requireAssignature": true
+                }
+            ]
+
+        }
+    ]
+}
 
 const create = {
 
@@ -17,7 +33,7 @@ const create = {
         _delete.addEventListener("click", () => div.remove())
 
         checkBox.type = "checkbox"
-        checkBox.checked = requireDate
+        checkBox.checked = requireDate || false
         checkBox.className = "require-checkbox"
         label.innerHTML = "Colocar data?"
 
@@ -66,7 +82,7 @@ const create = {
 
         input.value = folderName || ""
         input.className = "folder-name"
-        checkBox.checked = requireAssignature || ""
+        checkBox.checked = requireAssignature || false
 
         label.appendChild(checkBox)
         div.append(_delete, input, label)
@@ -92,9 +108,6 @@ function start() {
         // criando o arquivo na pasta "temp" primeiro
         fs.copyFileSync(configPath, __dirname + "/resources/config-bak.json")
 
-        // renomeando o nome do arquivo e alterando seu caminho de temp para resources
-        //fs.renameSync(__dirname + "/temp/config.json", __dirname + "/resources/config-bak-json")
-
         // alterando organizacao das pastas
         document.querySelectorAll(".folder").forEach(folder => {
             const inputValue = folder.querySelector("input.folder-name").value
@@ -110,7 +123,7 @@ function start() {
 
             newFolderConfig.push({
                 name: inputValue,
-                requireAssignature: requireDate,
+                requireDate: requireDate,
                 subfolders: newSubFoldersConfig
             })
         })
@@ -121,22 +134,30 @@ function start() {
         // escrevendo uma nova configuracao que pega como valor configJson modificado
         fs.writeFileSync(__dirname + "/resources/config.json", JSON.stringify(configJson))
 
-        alert("Todas as alterações foram salvas")
+        ipcRenderer.send("show-msg", {
+            type: "info",
+            title: "Mensagem",
+            message: "Todas as alterações foram salvas!",
+            buttons: ["OK"]
+        })
     })
 
     /* config.json load */
 
-    if (fs.existsSync(configPath)) {
-        // so.. load folders!
+    if (!fs.existsSync(configPath)) {
+        if (fs.existsSync(__dirname + "/resources/default-config.json")) {
+            defaultConfig = JSON.parse(fs.readFileSync(__dirname + "/resources/default-config.json", "utf8"))
+        }
 
-        const configJson = JSON.parse(fs.readFileSync(configPath, "utf8"))
-        console.log(configJson)
-        configJson.folders.forEach(folder => {
-            create.newFolder(folder.name, folder.requireDate, folder.subfolders)
-        })
-
-        //alert("config.json exist!")
+        fs.writeFileSync(configPath, JSON.stringify(defaultConfig))
     }
+
+    // so.. load folders!
+    const configJson = JSON.parse(fs.readFileSync(configPath, "utf8"))
+    
+    configJson.folders.forEach(folder => {
+        create.newFolder(folder.name, folder.requireDate, folder.subfolders)
+    })
 }
 
 start()

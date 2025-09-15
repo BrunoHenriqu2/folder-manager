@@ -1,11 +1,11 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 
 module.exports = {
-    newWindow(name) {
+    newWindow(name, width, height) {
         app.whenReady().then(() => {
             const win = new BrowserWindow({
-                width: 600,
-                height: 500,
+                width: width || 600,
+                height: height || 500,
                 focusable: true,
                 webPreferences: {
                     nodeIntegration: true, // para lidar tanto com back como front-end em um unico script, caso seja necessario.
@@ -15,5 +15,8 @@ module.exports = {
 
             try { win.loadFile(name) } catch (err) { return console.log(err) }
         })
+
+        ipcMain.on("close-app", () => app.quit())
+        ipcMain.on("show-msg", (e, object) => dialog.showMessageBoxSync(BrowserWindow.getFocusedWindow(), object))
     },
 }

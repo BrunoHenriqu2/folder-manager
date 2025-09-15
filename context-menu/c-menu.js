@@ -1,9 +1,19 @@
+const { ipcRenderer } = require("electron")
 const path = require("path")
 const fs = require("fs")
+const date = new Date
 const folderPath = process.argv[2]
 const configData = __dirname + "/resources/config.json"
 
-if (!configData) { alert("Nenhuma configuração encontrada!") }
+if (!configData) {
+    ipcRenderer.send("show-msg", {
+        type: "error",
+        title: "Erro",
+        message: "Nenhuma configuração encontrada!",
+        buttons: ["OK"]
+    })
+    ipcRenderer.send("close-app")
+}
 
 function getDay() {
     let currentDay = date.getDate()
@@ -48,9 +58,31 @@ function newFolderSelect(folder) {
     const p = document.createElement("p")
     const radio = document.createElement("input")
 
+    div.className = "radio-select"
+
     radio.type = "radio"
+    radio.addEventListener("change", () => {
+        folder.subfolders.forEach(subfolder => {
+            fs.mkdirSync(`/${folderPath}${p.innerText}/${subfolder.name}/`)
+
+            if (subfolder.requireAssignature) {
+                fs.mkdirSync(`/${folderPath}/${subfolder.name}/Assinado/`)
+                fs.mkdirSync(`/${folderPath}/${subfolder.name}/Pendente/`)
+            }
+
+            ipcRenderer.send("show-msg", {
+                type: "info",
+                title: "Mensagem",
+                message: "A pastas foram criadas!",
+                buttons: ["OK"]
+            })
+
+            ipcRenderer.send("close-app")
+        })
+    })
+
     p.innerHTML = folder.name
-    if (folder.requireDate) { p.innerHTML += `(${getDay()}-${getMonth()}-${getYear()})` }
+    if (folder.requireDate) { p.innerText += ` (${getDay()}-${getMonth()}-${getYear()})` }
 
     div.append(radio, p)
     document.querySelector("main").appendChild(div)

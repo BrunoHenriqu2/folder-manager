@@ -70,3 +70,19 @@ input[type="text"] {
 .new-subfolder {
     margin: 10px 0 10px 0;
 }
+
+.radio-select {
+    display: flex;
+    align-items: center;
+    font-size: large;
+
+    & input[type="radio"] {
+        margin: 0 .7rem 0 .7rem;
+        width: 20px;
+        height: 20px;
+    }
+
+    & p {
+        margin: 0;
+    }
+}
