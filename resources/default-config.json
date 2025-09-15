@@ -1,0 +1,15 @@
+{
+    "folders": [
+        {
+            "name": "Nome padrão",
+            "requireDate": false,
+            "subfolders": [
+                {
+                    "name": "Teste12",
+                    "requireAssignature": true
+                }
+            ]
+            
+        }
+    ]
+}

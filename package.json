@@ -2,7 +2,8 @@
   "name": "package",
   "version": "1.0.0",
   "description": "A application for better folder management",
-  "main": "app.js",
+  "main": "c-menu-window.js",
+  "type": "commonjs",
   "scripts": {
     "start": "electron ."
   },
