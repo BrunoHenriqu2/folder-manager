@@ -1,3 +1,3 @@
-const _electron = require("../_electron.js")
+const _electron = require("../library/_electron.js")
 
-_electron.newWindow("context-menu.html", 500, 400)
+_electron.newWindow("./context-menu.html", 500, 400)

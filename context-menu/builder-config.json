@@ -1,0 +1,13 @@
+{
+    "main": "c-menu-window.js",
+    "appId": "com.folder-manager.context-menu",
+    "start": "electron .",
+    "productName": "Context Menu",
+    "files": [
+        "**/*",
+        "../_electron.js"
+    ],
+    "win": {
+        "target": "nsis"
+    }
+}

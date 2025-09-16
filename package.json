@@ -2,26 +2,15 @@
   "name": "folder-manager",
   "version": "1.0.0",
   "description": "A application for better folder management",
-  "main": "c-menu-window.js",
   "type": "commonjs",
+  "main": "f-manager-window.js",
   "scripts": {
-    "start": "electron .",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder"
-  },
-  "build": {
-    "appId": "com.c-menu.id",
-    "productName": "Folder Manager - Context Menu",
-    "win": {
-      "target": "nsis"
-    },
-    "files": [
-      "_electron.js",
-      "c-menu-window.js",
-      "c-menu.json",
-      "context-menu.html",
-      "style.css"
-    ]
+    "start-folder-manager": "electron . --app-name",
+    "start-context-menu": "electron . --app-name",
+    "context-menu": "electron builder --config context-menu/builder-config.json",
+    "dist": "electron-builder",
+    "dist-context-menu": "npm run context-menu",
+    "pack": "electron-builder --dir"
   },
   "repository": {
     "type": "git",
@@ -30,8 +19,8 @@
   "keywords": [
     "none"
   ],
-  "author": "brunohenriqu2",
-  "license": "UNLICENSED",
+  "author": "BH2",
+  "license": "MIT",
   "devDependencies": {
     "electron": "^38.1.0",
     "electron-builder": "^26.0.12"
