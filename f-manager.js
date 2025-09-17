@@ -93,7 +93,7 @@ const create = {
 }
 
 function start() {
-    const configPath = __dirname + "/resources/config.json"
+    const configPath = __dirname + "/config.json"
 
     const newFolderButton = document.querySelector("#new-folder")
     newFolderButton.addEventListener("click", () => create.newFolder())
@@ -106,7 +106,7 @@ function start() {
         const newSubFoldersConfig = []
 
         // criando o arquivo na pasta "temp" primeiro
-        fs.copyFileSync(configPath, __dirname + "/resources/config-bak.json")
+        fs.copyFileSync(configPath, __dirname + "/config-bak.json")
 
         // alterando organizacao das pastas
         document.querySelectorAll(".folder").forEach(folder => {
@@ -132,7 +132,7 @@ function start() {
         configJson.folders = newFolderConfig
 
         // escrevendo uma nova configuracao que pega como valor configJson modificado
-        fs.writeFileSync(__dirname + "/resources/config.json", JSON.stringify(configJson))
+        fs.writeFileSync(__dirname + "/config.json", JSON.stringify(configJson))
 
         ipcRenderer.send("show-msg", {
             type: "info",
@@ -145,8 +145,8 @@ function start() {
     /* config.json load */
 
     if (!fs.existsSync(configPath)) {
-        if (fs.existsSync(__dirname + "/resources/default-config.json")) {
-            defaultConfig = JSON.parse(fs.readFileSync(__dirname + "/resources/default-config.json", "utf8"))
+        if (fs.existsSync(__dirname + "/default-config.json")) {
+            defaultConfig = JSON.parse(fs.readFileSync(__dirname + "/default-config.json", "utf8"))
         }
 
         fs.writeFileSync(configPath, JSON.stringify(defaultConfig))

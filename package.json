@@ -3,13 +3,10 @@
   "version": "1.0.0",
   "description": "A application for better folder management",
   "type": "commonjs",
-  "main": "f-manager-window.js",
+  "main": "main.js",
   "scripts": {
-    "start-folder-manager": "electron . --app-name",
-    "start-context-menu": "electron . --app-name",
-    "context-menu": "electron builder --config context-menu/builder-config.json",
+    "start": "electron .",
     "dist": "electron-builder",
-    "dist-context-menu": "npm run context-menu",
     "pack": "electron-builder --dir"
   },
   "repository": {
@@ -19,6 +16,25 @@
   "keywords": [
     "none"
   ],
+  "build": {
+    "appId": "com.folder-manager",
+    "productName": "Folder Manager",
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "files": [
+      "c-menu.js",
+      "context-menu.html",
+      "f-manager.js",
+      "folder-manager.html",
+      "style.css",
+      "main.js",
+      "default-config.json"
+    ]
+  },
   "author": "BH2",
   "license": "MIT",
   "devDependencies": {

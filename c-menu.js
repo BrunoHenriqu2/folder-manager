@@ -3,7 +3,7 @@ const path = require("path")
 const fs = require("fs")
 const date = new Date
 const folderPath = process.argv[2]
-const configData = __dirname + "/resources/config.json"
+const configData = __dirname + "/config.json"
 
 if (!configData) {
     ipcRenderer.send("show-msg", {
