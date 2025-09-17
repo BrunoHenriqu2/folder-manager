@@ -1,19 +1,6 @@
 const { ipcRenderer } = require("electron")
-const path = require("path")
-const fs = require("fs")
 const date = new Date
 const folderPath = process.argv[2]
-const configData = __dirname + "/config.json"
-
-if (!configData) {
-    ipcRenderer.send("show-msg", {
-        type: "error",
-        title: "Erro",
-        message: "Nenhuma configuração encontrada!",
-        buttons: ["OK"]
-    })
-    ipcRenderer.send("close-app")
-}
 
 function getDay() {
     let currentDay = date.getDate()
@@ -89,8 +76,20 @@ function newFolderSelect(folder) {
 }
 
 function start() {
+    const userData = ipcRenderer.invoke("get-user-data")
 
-    const configDataJson = JSON.parse(fs.readFileSync(configData))
+    if (userData.err) {
+        ipcRenderer.send("show-msg", {
+            type: "error",
+            title: "Erro",
+            message: "Nenhuma configuração encontrada!",
+            buttons: ["OK"]
+        })
+        ipcRenderer.send("close-app")
+    }
+
+    console.log(userData)
+
     console.log(configDataJson)
     configDataJson.folders.forEach(folder => {
         newFolderSelect(folder)

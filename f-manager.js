@@ -1,21 +1,4 @@
 const { ipcRenderer } = require("electron")
-const fs = require("fs")
-const path = require('path')
-let defaultConfig = {
-    "folders": [
-        {
-            "name": "Nome padrão 2",
-            "requireDate": false,
-            "subfolders": [
-                {
-                    "name": "Teste123",
-                    "requireAssignature": true
-                }
-            ]
-
-        }
-    ]
-}
 
 const create = {
 
@@ -92,28 +75,25 @@ const create = {
     }
 }
 
-function start() {
-    const configPath = __dirname + "/config.json"
+async function start() {
+    let userData = await ipcRenderer.invoke("get-user-data")
 
     const newFolderButton = document.querySelector("#new-folder")
     newFolderButton.addEventListener("click", () => create.newFolder())
 
     const saveButton = document.querySelector("#save")
     saveButton.addEventListener("click", () => {
-        const configJson = JSON.parse(fs.readFileSync(configPath, "utf8"))
-
         const newFolderConfig = []
-        const newSubFoldersConfig = []
+        
+        console.log(userData)
 
-        // criando o arquivo na pasta "temp" primeiro
-        fs.copyFileSync(configPath, __dirname + "/config-bak.json")
-
-        // alterando organizacao das pastas
+        // alterando organização das pastas
         document.querySelectorAll(".folder").forEach(folder => {
             const inputValue = folder.querySelector("input.folder-name").value
             const requireDate = folder.querySelector("input.require-checkbox").checked
-            const subFolders = folder.querySelectorAll("input.subfolder")
-
+            const subFolders = folder.querySelectorAll(".subfolder") // provavelmente é uma div
+            const newSubFoldersConfig = []
+            
             subFolders.forEach(subfolder => {
                 newSubFoldersConfig.push({
                     name: subfolder.querySelector("input.folder-name").value,
@@ -126,13 +106,14 @@ function start() {
                 requireDate: requireDate,
                 subfolders: newSubFoldersConfig
             })
+            console.log(newSubFoldersConfig, subFolders)
         })
 
-        // alterando apenas o objeto "folders" em configJson, caso eu va usar outros tipos de configuracoes (provavelmente nao)
-        configJson.folders = newFolderConfig
+        // alterando apenas o objeto "folders" em configJson, caso eu vá usar outros tipos de configuracoes (provavelmente nao)
+        defaultJson.folders = newFolderConfig
 
-        // escrevendo uma nova configuracao que pega como valor configJson modificado
-        fs.writeFileSync(__dirname + "/config.json", JSON.stringify(configJson))
+        // escrevendo uma nova configuracao que pega como valor um configJson modificado apenas nas pastas
+        ipcRenderer.send("set-user-data", defaultJson)
 
         ipcRenderer.send("show-msg", {
             type: "info",
@@ -142,22 +123,13 @@ function start() {
         })
     })
 
-    /* config.json load */
-
-    if (!fs.existsSync(configPath)) {
-        if (fs.existsSync(__dirname + "/default-config.json")) {
-            defaultConfig = JSON.parse(fs.readFileSync(__dirname + "/default-config.json", "utf8"))
-        }
-
-        fs.writeFileSync(configPath, JSON.stringify(defaultConfig))
-    }
-
-    // so.. load folders!
-    const configJson = JSON.parse(fs.readFileSync(configPath, "utf8"))
-    
-    configJson.folders.forEach(folder => {
-        create.newFolder(folder.name, folder.requireDate, folder.subfolders)
-    })
+    /* if userData exists then load folders */
+    if (!userData.err) {
+        userData.folders.forEach(folder => {
+            create.newFolder(folder.name, folder.requireDate, folder.subfolders)
+        })
+    } else {userData = {}} // resete tudo essa bomba tbm se não existir
+    console.log(userData)
 }
 
 start()
