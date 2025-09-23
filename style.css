@@ -8,6 +8,7 @@ body {
     overflow-y: auto;
     color: #f3f3f3;
     font-family: "alkatra";
+    padding: 0 0 4rem 0;
 }
 
 footer {
