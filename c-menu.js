@@ -1,6 +1,5 @@
 const { ipcRenderer } = require("electron")
 const date = new Date
-const folderPath = process.argv[2]
 
 function getDay() {
     let currentDay = date.getDate()
@@ -39,7 +38,7 @@ function getMonth() {
 
 function getYear() { return String(date.getFullYear()) }
 
-function newFolderSelect(folder) {
+function newFolderSelect(folder, folderPath) {
 
     const div = document.createElement("div")
     const p = document.createElement("p")
@@ -49,23 +48,25 @@ function newFolderSelect(folder) {
 
     radio.type = "radio"
     radio.addEventListener("change", () => {
+        ipcRenderer.send("mkdir", `${folderPath}/${p.innerText}/`)
+
         folder.subfolders.forEach(subfolder => {
-            fs.mkdirSync(`/${folderPath}${p.innerText}/${subfolder.name}/`)
+            ipcRenderer.send("mkdir", `${folderPath}/${p.innerText}/${subfolder.name}/`)
 
             if (subfolder.requireAssignature) {
-                fs.mkdirSync(`/${folderPath}/${subfolder.name}/Assinado/`)
-                fs.mkdirSync(`/${folderPath}/${subfolder.name}/Pendente/`)
+                ipcRenderer.send("mkdir", `${folderPath}/${p.innerText}/${subfolder.name}/Assinado/`)
+                ipcRenderer.send("mkdir", `${folderPath}/${p.innerText}/${subfolder.name}/Pendente/`)
             }
-
-            ipcRenderer.send("show-msg", {
-                type: "info",
-                title: "Mensagem",
-                message: "A pastas foram criadas!",
-                buttons: ["OK"]
-            })
-
-            ipcRenderer.send("close-app")
         })
+
+        ipcRenderer.send("show-msg", {
+            type: "info",
+            title: "Mensagem",
+            message: "A pastas foram criadas!",
+            buttons: ["OK"]
+        })
+
+        ipcRenderer.send("close-app")
     })
 
     p.innerHTML = folder.name
@@ -75,24 +76,23 @@ function newFolderSelect(folder) {
     document.querySelector("main").appendChild(div)
 }
 
-function start() {
-    const userData = ipcRenderer.invoke("get-user-data")
+async function start() {
+    const userData = await ipcRenderer.invoke("get-user-data")
+    const folderPath = await ipcRenderer.invoke("get-context-path")
 
-    if (userData.err) {
+    console.log(userData, folderPath)
+    if (userData.err || !userData || !folderPath) {
         ipcRenderer.send("show-msg", {
             type: "error",
             title: "Erro",
-            message: "Nenhuma configuração encontrada!",
+            message: "Nenhuma configuração de pastas ou o caminho passado como argumento é inválido!",
             buttons: ["OK"]
         })
         ipcRenderer.send("close-app")
     }
 
-    console.log(userData)
-
-    console.log(configDataJson)
-    configDataJson.folders.forEach(folder => {
-        newFolderSelect(folder)
+    userData.folders.forEach(folder => {
+        newFolderSelect(folder, folderPath)
     })
 }
 

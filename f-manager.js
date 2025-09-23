@@ -109,11 +109,12 @@ async function start() {
             console.log(newSubFoldersConfig, subFolders)
         })
 
+        ipcRenderer.send("set-user-data-backup", userData)
         // alterando apenas o objeto "folders" em configJson, caso eu vá usar outros tipos de configuracoes (provavelmente nao)
-        defaultJson.folders = newFolderConfig
+        userData.folders = newFolderConfig
 
         // escrevendo uma nova configuracao que pega como valor um configJson modificado apenas nas pastas
-        ipcRenderer.send("set-user-data", defaultJson)
+        ipcRenderer.send("set-user-data", userData)
 
         ipcRenderer.send("show-msg", {
             type: "info",
@@ -124,12 +125,12 @@ async function start() {
     })
 
     /* if userData exists then load folders */
+    console.log(userData)
     if (!userData.err) {
         userData.folders.forEach(folder => {
             create.newFolder(folder.name, folder.requireDate, folder.subfolders)
         })
     } else {userData = {}} // resete tudo essa bomba tbm se não existir
-    console.log(userData)
 }
 
 start()
