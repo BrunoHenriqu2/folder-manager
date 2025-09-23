@@ -23,7 +23,7 @@ function newWindow(name, width, height) {
     ipcMain.on("set-user-data", (e, dataObject) => {
         if (typeof dataObject !== "string") {dataObject = JSON.stringify(dataObject)}
         
-        const userDataPath = app.getPath("userData")
+        const userDataPath = path.dirname(app.getPath("exe")) // app.getPath("userData")
         const configFilePath = path.join(userDataPath, "config.json")
         
         fs.writeFileSync(configFilePath, dataObject)
@@ -31,7 +31,7 @@ function newWindow(name, width, height) {
     ipcMain.on("set-user-data-backup", (e, dataObject) => {
         if (typeof dataObject !== "string") {dataObject = JSON.stringify(dataObject)}
 
-        const userDataPath = app.getPath("userData")
+        const userDataPath = path.dirname(app.getPath("exe")) // app.getPath("userData")
         const configBakFilePath = path.join(userDataPath, "config-bak.json")
 
         // cria um backup do arquivo

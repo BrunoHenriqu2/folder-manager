@@ -1,1 +1,29 @@
-{"folders":[{"name":"Nome padrão","requireDate":false,"subfolders":[]},{"name":"Teste","requireDate":true,"subfolders":[]},{"name":"Abababa","requireDate":false,"subfolders":[]},{"name":"pepe","requireDate":false,"subfolders":[{"name":"tyete","requireAssignature":false}]}]}
+{
+    "folders": [
+        {
+            "name": "Conf. Consignado",
+            "requireDate": false,
+            "subfolders": []
+        },
+        {
+            "name": "Teste",
+            "requireDate": true,
+            "subfolders": []
+        },
+        {
+            "name": "Abababa",
+            "requireDate": false,
+            "subfolders": []
+        },
+        {
+            "name": "pepe",
+            "requireDate": false,
+            "subfolders": [
+                {
+                    "name": "tyete",
+                    "requireAssignature": false
+                }
+            ]
+        }
+    ]
+}
