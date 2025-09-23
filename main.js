@@ -40,7 +40,7 @@ function newWindow(name, width, height) {
     ipcMain.on("mkdir", (e, path, options) => { fs.mkdirSync(path, options) })
     ipcMain.handle("get-user-data", (e) => {
         try {
-            return JSON.parse(fs.readFileSync(app.getPath("userData") + "/config.json"))
+            return JSON.parse(fs.readFileSync(path.dirname(app.getPath("exe")) + "/config.json"))
         } catch(err) {  console.log(err); return {err: toString(err)} }
     })
     ipcMain.handle("get-context-path", (e) => { return folderPath })
