@@ -51,11 +51,11 @@ function newFolderSelect(folder, folderPath) {
         ipcRenderer.send("mkdir", `${folderPath}/${p.innerText}/`, {recursive: true})
 
         folder.subfolders.forEach(subfolder => {
-            ipcRenderer.send("mkdir", `${folderPath}/${p.innerText}/${subfolder.name}/`, {recursive: true})
+            ipcRenderer.send("mkdir", `"${folderPath}/${p.innerText}/${subfolder.name}/"`, {recursive: true})
 
             if (subfolder.requireAssignature) {
-                ipcRenderer.send("mkdir", `${folderPath}/${p.innerText}/${subfolder.name}/Assinado/`, {recursive: true})
-                ipcRenderer.send("mkdir", `${folderPath}/${p.innerText}/${subfolder.name}/Pendente/`, {recursive: true})
+                ipcRenderer.send("mkdir", `"${folderPath}/${p.innerText}/${subfolder.name}/Assinado/"`, {recursive: true})
+                ipcRenderer.send("mkdir", `"${folderPath}/${p.innerText}/${subfolder.name}/Pendente/"`, {recursive: true})
             }
         })
 
