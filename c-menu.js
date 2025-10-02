@@ -48,14 +48,14 @@ function newFolderSelect(folder, folderPath) {
 
     radio.type = "radio"
     radio.addEventListener("change", () => {
-        ipcRenderer.send("mkdir", `${folderPath}/${p.innerText}/`, {recursive: true})
+        ipcRenderer.send("mkdir", `${folderPath}/${p.innerText}/`)
 
         folder.subfolders.forEach(subfolder => {
-            ipcRenderer.send("mkdir", `"${folderPath}/${p.innerText}/${subfolder.name}/"`, {recursive: true})
+            ipcRenderer.send("mkdir", `${folderPath}/${p.innerText}/${subfolder.name}/`)
 
             if (subfolder.requireAssignature) {
-                ipcRenderer.send("mkdir", `"${folderPath}/${p.innerText}/${subfolder.name}/Assinado/"`, {recursive: true})
-                ipcRenderer.send("mkdir", `"${folderPath}/${p.innerText}/${subfolder.name}/Pendente/"`, {recursive: true})
+                ipcRenderer.send("mkdir", `${folderPath}/${p.innerText}/${subfolder.name}/Assinado/`)
+                ipcRenderer.send("mkdir", `${folderPath}/${p.innerText}/${subfolder.name}/Pendente/`)
             }
         })
 

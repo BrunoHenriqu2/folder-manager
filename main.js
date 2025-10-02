@@ -1,7 +1,7 @@
 const { ipcMain, dialog, app, BrowserWindow } = require("electron")
 const path = require("path")
 const fs = require("fs")
-const folderPath = process.argv[2]
+let folderPath = process.argv[2]
 
 function newWindow(name, width, height) {
     app.whenReady().then(() => {
@@ -46,6 +46,11 @@ function newWindow(name, width, height) {
     ipcMain.handle("get-context-path", (e) => { return folderPath })
 }
 
-if (folderPath) { return newWindow("context-menu.html", 500, 400) }
+if (folderPath) { 
+    if (process.argv.length > 3) {
+        folderPath = process.argv.slice(2).join(" ")
+    }
+    return newWindow("context-menu.html", 500, 400) 
+}
 
 newWindow("folder-manager.html", 800, 600)
